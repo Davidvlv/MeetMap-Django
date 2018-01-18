@@ -1,0 +1,197 @@
+{% extends 'mainapp/main.html' %}
+{% load static %}
+
+{% block head %}
+  <script src="{% static "/mainapp/jqueryUI/jquery-ui.min.js" %}"></script>
+  <link href="{% static "/mainapp/jqueryUI/jquery-ui.min.css" %}" rel="stylesheet">
+
+  <link href="{% static "/mainapp/css/events.css" %}" rel="stylesheet">
+  <link href="{% static "/mainapp/css/map.css" %}" rel="stylesheet">
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIdZNGch6Ewi6hyHxO0aSA_FQNFU0y-M0&callback=initMap"
+  async defer></script>
+  <script src="{% static "/mainapp/js/map.js" %}"></script>
+{% endblock %}
+
+
+{% block content %}
+  <div id="map"></div>
+  <div class="footer">
+      <fieldset class="group">
+          <legend>My Interests</legend>
+          <div id="interests"></div>
+      </fieldset>
+  </div>
+{% endblock %}
+
+{% block dialogs %}
+  <div id="create-event">
+    <form enctype="multipart/form-data" action="/create_event/" method="post"
+      id="create-event-form">
+      {% csrf_token %}
+      <div id="generic-error-template">
+        <div class="alert alert-danger">
+          <div id="generic-error-text">
+            There was an error creating the event.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.name.name }}">
+          {{ event_form.name.label }}
+        </label>
+        <input type="text" class="form-control"
+          id="id_{{ event_form.name.name }}"
+          name="{{ event_form.name.name }}"
+          value="{{ event_form.name.value|default_if_none:"" }}"
+          placeholder="Name">
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.from_time.name }}">
+          {{ event_form.from_time.label }}
+        </label>
+        <br>
+        {{ event_form.from_time }}
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.to_time.name }}">
+          {{ event_form.to_time.label }}
+        </label>
+        <br>
+        {{ event_form.to_time }}
+      </div>
+      <label for="id_{{ event_form.location.name }}">
+        {{ event_form.location.label }}
+      </label>
+      <div class="form-group">
+        <label for="id_{{ event_form.street_number.name }}">
+          {{ event_form.street_number.label }}
+        </label>
+        <input type="number" class="form-control"
+          id="id_{{ event_form.street_number.name }}"
+          name="{{ event_form.street_number.name }}"
+          value="{{ event_form.street_number.value|default_if_none:"" }}"
+          placeholder="Street Number">
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.street_name.name }}">
+          {{ event_form.street_name.label }}
+        </label>
+        <input type="text" class="form-control"
+          id="id_{{ event_form.street_name.name }}"
+          name="{{ event_form.street_name.name }}"
+          value="{{ event_form.street_name.value|default_if_none:"" }}"
+          placeholder="Street Name">
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.suburb.name }}">
+          {{ event_form.suburb.label }}
+        </label>
+        <input type="text" class="form-control"
+          id="id_{{ event_form.suburb.name }}"
+          name="{{ event_form.suburb.name }}"
+          value="{{ event_form.suburb.value|default_if_none:"" }}"
+          placeholder="Suburb">
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.city.name }}">
+          {{ event_form.city.label }}
+        </label>
+        <input type="text" class="form-control"
+          id="id_{{ event_form.city.name }}"
+          name="{{ event_form.city.name }}"
+          value="{{ event_form.city.value|default_if_none:"" }}"
+          placeholder="City">
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.zipcode.name }}">
+          {{ event_form.zipcode.label }}
+        </label>
+        <input type="number" class="form-control"
+          id="id_{{ event_form.zipcode.name }}"
+          name="{{ event_form.zipcode.name }}"
+          value="{{ event_form.zipcode.value|default_if_none:"" }}"
+          placeholder="Zipcode">
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.is_private.name }}">
+          {{ event_form.is_private.label }}
+        </label>
+        {{ event_form.is_private }}
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.picture.name }}">
+          {{ event_form.picture.label }}
+        </label>
+        <br>
+        {{ event_form.picture }}
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.interests.name }}">
+          {{ event_form.interests.label }}
+        </label>
+        <br>
+        {{ event_form.interests }}
+      </div>
+      <div class="form-group">
+        <label for="id_{{ event_form.description.name }}">
+          {{ event_form.description.label }}
+        </label>
+        <textarea type="text" class="form-control description"
+          id="id_{{ event_form.description.name }}"
+          name="{{ event_form.description.name }}"
+          value="{{ event_form.description.value|default_if_none:"" }}">
+        </textarea>
+      </div>
+    </form>
+  </div>
+
+  <div id="create-event-success">
+    <div class="alert alert-success">
+      The event has been successfully created !
+    </div>
+  </div>
+
+  <div id="view-event">
+    <form action="/going_to_event/" method="post" class="text-center"
+        id="event-details" >
+      {% csrf_token %}
+      <div id="event-error-template">
+        <div class="alert alert-danger">
+          <div id="event-error-text">
+            There was an error rsvp'ing to the event.
+          </div>
+        </div>
+      </div>
+      <h2 id="event-name">Event Name</h2>
+      <br>
+      <p id="event-description">Event descrption</p>
+      <br>
+      <h5 id="event-from-time">From time</h5>
+      <h5 id="event-to-time">To time</h5>
+      <br>
+      <h5>Location:</h5>
+      <p id="event-location">Location</p>
+      <br>
+      <h5>Interests:</h5>
+      <div id="event-interests" class="text-center">Event Interests</div>
+    </form>
+  </div>
+
+  <div id="rsvp-event-success">
+    <div class="alert alert-success">
+      You have RSVP'd to the event !
+    </div>
+  </div>
+
+  <div id="cancel-rsvp-event-success">
+    <div class="alert alert-success">
+      You have cancelled your RSVP !
+    </div>
+  </div>
+
+  <div id="delete-event-success">
+    <div class="alert alert-success">
+      The event has been successfully deleted !
+    </div>
+  </div>
+{% endblock %}

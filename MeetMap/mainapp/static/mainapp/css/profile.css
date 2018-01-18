@@ -1,0 +1,59 @@
+@import url("../bootstrap/css/bootstrap.min.css");
+
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+body
+{
+    font-family: 'Lato', 'sans-serif';
+    background-color: #f5f5f5;
+}
+
+.container {
+    float: left;
+}
+
+.top-margin {
+    float: left;
+    margin-top: 0px;
+}
+
+.display {
+    width: 500px;
+    height: auto;
+}
+.profile
+{
+    min-width: 500px;
+    min-height: 355px;
+    display: inline-block;
+    border: none;
+}
+span.tags
+{
+    background: #1abc9c;
+    border-radius: 2px;
+    color: #f5f5f5;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin-right: 2px;
+    padding-bottom: 5px;
+}
+span.tagsW
+{
+    background: #d4d4d4;
+    border-radius: 2px;
+    color: #222222;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin-right: 2px;
+    padding-bottom: 5px;
+}
+span.tagsB
+{
+    background: #333;
+    border-radius: 2px;
+    color: #f5f5f5;
+    font-weight: bold;
+    padding: 2px 4px;
+    margin-right: 2px;
+    padding-bottom: 5px;
+}

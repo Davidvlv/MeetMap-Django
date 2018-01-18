@@ -1,0 +1,26 @@
+{% extends 'mainapp/main.html' %}
+
+{% load static %}
+
+{% block head %}
+    <script src="{% static '/mainapp/js/profile.js' %} "></script>
+    <link href="{% static '/mainapp/css/profile.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content%}
+ <div class="container display top-margin">
+     <div class="profile">
+       <h5><b>Username:</b> {{ profile.username }}</h5>
+       <h5><b>Description:</b> {{ profile.description }}</h5>
+       <h5><b>Interests:</b></h5>
+       {% for interest in interests %}
+       {{ interest }}
+       <br>
+       {% endfor %}
+       <br>
+       <a href="{% url 'mainapp:createprofile' %}">
+           <button>Edit Profile</button>
+       </a>
+     </div>
+</div>
+{% endblock %}
